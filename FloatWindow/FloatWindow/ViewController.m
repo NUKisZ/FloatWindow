@@ -12,6 +12,8 @@
 
 @interface ViewController ()
 
+/** 在ViewDidAppear 中标记为YES 表示当前页面已显示,在ViewDidDisAppear 中,标记为NO记录当前页面已退出或推出新页面 */
+@property (nonatomic, assign) BOOL selfIsShow;
 
 @end
 
@@ -30,7 +32,14 @@
     
     
 }
-
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.selfIsShow = YES;
+}
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    self.selfIsShow = NO;
+}
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -38,6 +47,9 @@
     [ELCommonHelper forceOrientation:UIInterfaceOrientationPortrait];
 }
 - (void)notificationAction:(NSNotification *)not{
+    if(self.selfIsShow){
+        NSLog(@"当前页面");
+    }
     UIWindow *window = [[UIApplication sharedApplication]delegate].window;
     if(self != window.kx_currentViewController){
         NSLog(@"不是");
